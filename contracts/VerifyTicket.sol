@@ -1,35 +1,17 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity 0.8.4;
 
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-/**
-   0 - A pessoa obtem um ticket. 
-
-   1 - a pessoa apresenta o ticket e o seu endereço publico e assina uma mensagem. 
-
-   2-  o verificador  verifica se o ticket pertence ao endereço e assina uma mensagem 
-   com o endereço. 
-
-   3 - a pessoa recebe a mensagem enviada e realiza discritografa a mensagem . 
-
-   4 - O verificador recebe a mensagem e compara com a mensagem enviada - se estiver ok true senao false. 
-
-    
-
- */
 contract VerifyTicket {
-
     struct Ticket {
         uint256 number;
         address owner;
         bytes32 code;
         bool used;
+        uint256 usedAt;
     }
-
-    mapping(address => Ticket) private tickets;
 
     mapping(uint256 => Ticket) private storageTickets;
 
@@ -46,9 +28,7 @@ contract VerifyTicket {
         bytes32 code = keccak256(
             abi.encodePacked(block.difficulty, block.timestamp, id)
         );
-        Ticket memory ticket = Ticket(id, msg.sender, code, false);
-        console.log(id);
-        tickets[msg.sender] = ticket;
+        Ticket memory ticket = Ticket(id, msg.sender, code, false, 0);
         storageTickets[id] = ticket;
         myTicketsIds[msg.sender].push(id);
         return id;
@@ -58,8 +38,7 @@ contract VerifyTicket {
         return myTicketsIds[msg.sender];
     }
 
-
-        //only admin or sender -security 
+    //only admin or sender -security todo
     function getTicketInfo(uint256 id)
         external
         view
@@ -78,7 +57,7 @@ contract VerifyTicket {
     }
 
     function verifyTicket(uint256 id) internal view returns (bool) {
-        Ticket storage ticket = tickets[msg.sender];
+        Ticket storage ticket = storageTickets[id];
 
         if (!(ticket.number == id && ticket.owner == msg.sender)) {
             return false;
@@ -98,7 +77,6 @@ contract VerifyTicket {
             ethSignedMessageHash,
             signature
         );
-        console.log("ADDR", receivedAddress, signer);
         return receivedAddress == signer;
     }
 
@@ -108,30 +86,14 @@ contract VerifyTicket {
         uint256 nonce,
         bytes memory signature
     ) external returns (bytes32) {
-        Ticket storage ticket = tickets[msg.sender];
+        Ticket storage ticket = storageTickets[id];
         if (
             verifyTicket(id) &&
             verifySignature(msg.sender, message, nonce, signature) &&
             !ticket.used
         ) {
             ticket.used = true;
-            //ticket.used = true; set used off-chain the code enter.
-            //console.log(ticket.code);
-            return ticket.code; //ticket.code;
-        } else {
-            return "";
-        }
-    }
-
-    function getTicketCode(
-        uint256 id,
-        uint256 nonce,
-        bytes32 message,
-        bytes memory signature
-    ) external view returns (bytes32) {
-        if (verifySignature(msg.sender, message, nonce, signature)) {
-            Ticket storage ticket = tickets[msg.sender];
-
+            ticket.usedAt = block.timestamp;
             return ticket.code;
         } else {
             return "";

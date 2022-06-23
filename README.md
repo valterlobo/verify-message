@@ -1,4 +1,4 @@
-# POC Verification of signature and verification of ownership for access (ticket)
+# POC Verification of signature and verification of ownership for access (ticket) [Solidity]
 
 ##  Verify Ticket
 @startuml

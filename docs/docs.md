@@ -19,3 +19,6 @@ https://github.com/pubkey/eth-crypto
 
 https://github.com/HarryR/solcrypto
 
+https://www.web3dev.com.br/marceloc/introducao-a-criptografia-e-assinaturas-no-ethereum-2lle
+
+

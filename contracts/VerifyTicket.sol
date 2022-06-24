@@ -42,9 +42,9 @@ contract VerifyTicket {
     function getTicketInfo(uint256 id)
         external
         view
-        returns (uint256, bytes32)
+        returns (uint256, bytes32, bool)
     {
-        return (storageTickets[id].number, storageTickets[id].code);
+        return (storageTickets[id].number, storageTickets[id].code, storageTickets[id].used);
     }
 
     function getMessageHash(bytes32 message, uint256 nonce)

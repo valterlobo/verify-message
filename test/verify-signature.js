@@ -8,7 +8,7 @@ describe("VerifySignature", function () {
     const VerifySignature = await ethers.getContractFactory("VerifySignature");
     const contract = await VerifySignature.deploy();
     await contract.deployed();
-    
+
     const signer = accounts[0];
     const to = accounts[1].address;
     const amount = 999;

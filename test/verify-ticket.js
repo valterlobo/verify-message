@@ -18,24 +18,40 @@ describe("VerifySecret", function () {
     // get my tickets
     const myTicketsID = await contract.connect(signer).getMyTickets();
 
-    myTicketsID.forEach(async (id) => {
-      console.log(id);
+    // test array length - qtd tikckets
+    expect(myTicketsID.length).to.equal(10);
 
-      const resultTicket = await contract.connect(signer).getTicketInfo(id);
+    await Promise.all(
+      myTicketsID.map(async (id) => {
+        const resultTicket = await contract.connect(signer).getTicketInfo(id);
 
-      // verify
-      const idTicket = resultTicket[0];
-      const message = resultTicket[1];
-      const nonce = Math.floor(Math.random() * idTicket.value);
-      const hash = await contract
-        .connect(signer)
-        .getMessageHash(message, nonce);
-      const sig = await signer.signMessage(ethers.utils.arrayify(hash));
+        // verify
+        const idTicket = resultTicket[0];
+        const message = resultTicket[1];
+        const n = parseInt(idTicket);
+        const nonce = Math.floor(Math.random() * n);
+        const hash = await contract
+          .connect(signer)
+          .getMessageHash(message, nonce);
+        // console.log(hash);
+        const sig = signer.signMessage(ethers.utils.arrayify(hash));
 
-      // use ticket
-      const tx = await contract
-        .connect(signer)
-        .useTicket(idTicket, message, nonce, sig);
-    });
+        // use ticket
+        await contract.connect(signer).useTicket(idTicket, message, nonce, sig);
+
+        const resultUsedTicket = await contract
+          .connect(signer)
+          .getTicketInfo(id);
+        // console.log(resultUsedTicket);
+        // console.log(message);
+
+        // test  used ticket
+        expect(resultUsedTicket[2]).to.equal(true);
+        // test  code ticket
+        expect(resultUsedTicket[1]).to.equal(message);
+
+        // console.log("FIM");
+      })
+    );
   });
 });

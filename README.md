@@ -1,66 +1,16 @@
-# POC Verification of signature and verification of ownership for access (ticket) [Solidity]
-
-##  Verify Ticket
-@startuml
-
-' -- classes --
+# Subscription verification and access via tickets  [Solidity] 
 
 
-class VerifyTicket {
-    ' -- inheritance --
+# Verification of signature and release of access with ticket ownership [Solidity]
 
-    ' -- usingFor --
-	{abstract}📚ECDSA for [[bytes32]]
-	{abstract}📚Counters for [[Counters.Counter]]
-
-    ' -- vars --
-	-[[mapping uint256=>Ticket ]] storageTickets
-	-[[mapping address=>null ]] myTicketsIds
-	-[[Counters.Counter]] ticketIds
-
-    ' -- methods --
-	+getTicket()
-	+🔍getMyTickets()
-	+🔍getTicketInfo()
-	+🔍getMessageHash()
-	#🔍verifyTicket()
-	#🔍verifySignature()
-	+useTicket()
-
-}
-' -- inheritance / usingFor --
-VerifyTicket ..[#DarkOliveGreen]|> ECDSA : //for bytes32//
-VerifyTicket ..[#DarkOliveGreen]|> Counters : //for Counters.Counter//
-
-@enduml
+## Smart Contract: Verify Ticket 
 
 
-##  Verify signature
+![Verify Ticket](/docs/VerifyTicket.png "Verify Ticket")
 
-@startuml
+## Smart Contract: Verify signature
 
-' -- classes --
-
-
-class VerifySignature {
-    ' -- inheritance --
-
-    ' -- usingFor --
-	{abstract}📚ECDSA for [[bytes32]]
-
-    ' -- vars --
-
-    ' -- methods --
-	+🔍getMessageHash()
-	+🔍getEthSignedMessageHash()
-	+🔍verify()
-	+🔍recoverSigner()
-
-}
-' -- inheritance / usingFor --
-VerifySignature ..[#DarkOliveGreen]|> ECDSA : //for bytes32//
-
-@enduml
+![Verify signature](/docs/VerifySignature.png "Verify signature")
 
 ## Hardhat tasks 
 

@@ -1,6 +1,3 @@
-# Subscription verification and access via tickets  [Solidity] 
-
-
 # Verification of signature and release of access with ticket ownership [Solidity]
 
 ## Smart Contract: Verify Ticket 

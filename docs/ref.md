@@ -23,3 +23,5 @@ https://www.web3dev.com.br/marceloc/introducao-a-criptografia-e-assinaturas-no-e
 ### Why digital signatures are essential for blockchains
 https://www.coinbase.com/pt/cloud/discover/dev-foundations/digital-signatures
 
+### Verifiable Random Function (VRF) library written in Solidity
+https://github.com/witnet/vrf-solidity
